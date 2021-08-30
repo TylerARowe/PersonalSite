@@ -13,6 +13,47 @@ body {
   color: #444444;
 }
 
+.contactWhole{
+    background-color: lightblue;
+}
+
+.center {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}
+
+.abtMeBody {
+    background-color:lightblue;
+    width: 100%;
+}
+
+.indexBody {
+    background-color: lightblue;
+}
+
+.abtMeText {
+    color: black;    
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+
+.abtMeContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+img {   
+    max-width: 100%;
+}
+
+.selfImage {    
+}
+
+.abtMeTitle {
+}
+
 a {
   color: #2487ce;
   text-decoration: none;
