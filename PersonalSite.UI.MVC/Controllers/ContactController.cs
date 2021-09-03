@@ -12,73 +12,43 @@ namespace PersonalSite.UI.MVC.Controllers
 {
     public class ContactController : Controller
     {
-        //Contact - POST
+        [HttpGet]
+        public ActionResult Contact()
+        {
+            ViewBag.Message = "Your contact page.";
+
+            return View();
+        }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Contact(ContactViewModel cvm)
         {
-            //When a class has validation attributes, that validation should be checked before attempting to process any of the data they've provided. If they're going to send us something, before we even try to do anything with it we need to validate that its the correct data. 
+            //Basic steps for sending an email in .NET
+            //Step 1) Create a string for the mail body.
+            string body = $"Message received from my personal website. From {cvm.Name} - Subject {cvm.Subject}<br />Message:{cvm.Message}";
 
-            if (!ModelState.IsValid)
-            {
-                //Send them back to the form, by passing the object to the view,
-                //the form returns with the original information they provided
+            //Step 2) Create the mailmessage object and customize
+            MailMessage msg = new MailMessage("noreply@tylerarowe.com", "tyl3rr0we95@gmail.com", "Message from your contact form,", body);
 
-                return View(cvm);
-            }
+            msg.IsBodyHtml = true;
 
-            //Only exectures if the form (object) passes the model validation
-            //Build the message -- what we will see when we receive their email.
+            //Step 3) Create the smtpClient object -> supply mail server, username, and wp
+            SmtpClient client = new SmtpClient("mail.tylerarowe.com");
+            client.Credentials = new NetworkCredential("noreply@tylerarowe.com", "100%OrangeJuice");
+            client.Port = 8889;
 
-            string message = $"You have recieved an email from {cvm.Name} with a subject: " +
-                $"{cvm.Subject}. Please respond to {cvm.Email} with your response to the " +
-                $"following message: <br/> {cvm.Message}";
+            //Step 4) attempt to send the email
 
-            //MailMessage(what actually sends the email.)
-
-            MailMessage mm = new MailMessage(
-                //From
-                ConfigurationManager.AppSettings["EmailUser"].ToString(),
-                //To
-                //you@yourdomain.ext, could be you@gmail.com, hotmail, etc.
-                //Sometimes -- SmarterASP has experienced issues with forwarding, if you find the forwarding sdoes not want to work as it's written here, you can hardcode the email you want to forward to
-                ConfigurationManager.AppSettings["EmailTo"].ToString(),
-                cvm.Subject,
-                message
-                );
-
-            //MailMessage properties
-            //Allow html formatting in the email (message has HTML in it) (similar to Html.Raw())
-            mm.IsBodyHtml = true;
-            //If you want to mark these emails with "high priority"
-            mm.Priority = MailPriority.High;
-            //If you dont set this, the default is normal.
-
-            //Respond to the senders email instead of our own SMTP client (webmail)
-            mm.ReplyToList.Add(cvm.Email);
-
-            //SMTP client
-            //This is the information from the host, in our case this is SmarterASP
-            //This allows the email to actually be sent.
-
-            SmtpClient Client = new SmtpClient(ConfigurationManager.AppSettings["EmailClient"].ToString());
-            //Client Credentials (SmarterASP requires your username and password.)
-            Client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["EmailUser"].ToString(),
-                ConfigurationManager.AppSettings["EmailPass"].ToString());
-
-            //It is possible to have configuration issues, so we can encapsulate our code in a try catch
             try
             {
-                Client.Send(mm);
+                client.Send(msg);
+                return View("EmailConfirmation", cvm);
             }
-            catch (Exception ex)
+            catch (System.Exception)
             {
-                ViewBag.CustomerMessage = $"We're sorry, but your request could not be completed at this time. " +
-                    $"Please try again later. Error Message: <br/> {ex.StackTrace}";
-                throw;
+                ViewBag.ErrorMessage = "Something went wrong - please try again.";
+                return View(cvm);
             }
-
-            return View("EmailConfirmation", cvm);
         }
     }
 }

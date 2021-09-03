@@ -393,11 +393,11 @@
     <Content Include="_Archive\assets\vendor\remixicon\remixicon.woff" />
     <Content Include="_Archive\assets\vendor\remixicon\remixicon.woff2" />
     <Content Include="Views\Shared\_OriginalLayout.cshtml" />
+    <Content Include="Views\Contact\EmailConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ContactForm\" />
-    <Folder Include="Views\Contact\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

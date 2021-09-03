@@ -10,13 +10,16 @@ namespace PersonalSite.UI.MVC.Models
     {
         [Required(ErrorMessage = "* Name is required.")]
         public string Name { get; set; }
+
         [Required(ErrorMessage = "* Email address is required.")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
         [Required(ErrorMessage = "* Subject is required.")]
         public string Subject { get; set; }
+
         [Required(ErrorMessage = "* Message is required.")]
-        [UIHint("MultilineText")] //Provide a lareger TextArea in the UI.
+        [UIHint("MultilineText")]
         public string Message { get; set; }
     }
 }
